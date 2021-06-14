@@ -18,30 +18,39 @@ export default {
     },
     pullUpLoad: {
       type: Boolean,
-      default: true,
-      observeImage: true,
+      default: false,
+    },
+    data: {
+      type: Array,
+      default: () => {
+        return [];
+      },
     },
   },
   data() {
     return {
       scroll: null,
+      message: "哈哈哈",
     };
   },
   mounted() {
-    //创建scroll对象
+    // 1.创建BScroll对象
     this.scroll = new BScroll(this.$refs.wrapper, {
       click: true,
       probeType: this.probeType,
       pullUpLoad: this.pullUpLoad,
     });
-    //监听滚动位置
+
+    // 2.监听滚动的位置
     this.scroll.on("scroll", (position) => {
       this.$emit("scroll", position);
     });
-    //监听上拉加载
+
+    // 3.监听上拉事件
     this.scroll.on("pullingUp", () => {
       this.$emit("pullingUp");
     });
+    console.log(this.scroll);
   },
   methods: {
     scrollTo(x, y, time = 300) {
@@ -51,7 +60,12 @@ export default {
       this.scroll.finishPullUp();
     },
     refresh() {
-      this.scroll.refresh();
+      this.scroll && this.scroll.refresh();
+    },
+  },
+  watch: {
+    data() {
+      setTimeout(this.refresh, 20);
     },
   },
 };
